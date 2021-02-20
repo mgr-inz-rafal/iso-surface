@@ -1,82 +1,14 @@
+mod behavior;
+mod physics;
+
+use crate::behavior::behavior::Behavior;
 use itertools::Itertools;
+use physics::Physics;
 
 const SCALE: f64 = 400.0;
 
-pub struct Physics {
-    x: f64,
-    y: f64,
-    r: f64,
-    vx: f64,
-    vy: f64,
-}
-
-impl Physics {
-    pub fn new(x: f64, y: f64, r: f64, vx: f64, vy: f64) -> Self {
-        Self { x, y, r, vx, vy }
-    }
-}
-
 trait Ticker {
     fn tick(&self, input: Physics) -> Physics;
-}
-
-pub struct Drift {}
-pub struct Bounce {}
-
-impl Ticker for Drift {
-    fn tick(&self, input: Physics) -> Physics {
-        Physics::new(
-            input.x + input.vx,
-            input.y + input.vy,
-            input.r,
-            input.vx,
-            input.vy,
-        )
-    }
-}
-
-impl Ticker for Bounce {
-    fn tick(&self, input: Physics) -> Physics {
-        Physics::new(
-            input.x + input.vx,
-            input.y + input.vy,
-            input.r,
-            if input.x + input.vx > 1024.0 || input.x + input.vx < 0.0 {
-                -input.vx
-            } else {
-                input.vx
-            },
-            if input.y + input.vy > 768.0 || input.y + input.vy < 0.0 {
-                -input.vy
-            } else {
-                input.vy
-            },
-        )
-    }
-}
-
-pub enum Behavior {
-    Drift(Drift),
-    Bounce(Bounce),
-}
-
-impl Behavior {
-    pub fn new_drift() -> Behavior {
-        Behavior::Drift(Drift {})
-    }
-
-    pub fn new_bounce() -> Behavior {
-        Behavior::Bounce(Bounce {})
-    }
-}
-
-impl Ticker for Behavior {
-    fn tick(&self, input: Physics) -> Physics {
-        match self {
-            Behavior::Drift(implementation) => implementation.tick(input),
-            Behavior::Bounce(implementation) => implementation.tick(input),
-        }
-    }
 }
 
 pub struct Blob {
