@@ -1,6 +1,8 @@
+use itertools::Itertools;
+
 const SCALE: f64 = 400.0;
 
-pub struct Blob {
+pub struct Physics {
     x: f64,
     y: f64,
     r: f64,
@@ -8,36 +10,55 @@ pub struct Blob {
     vy: f64,
 }
 
-impl Blob {
+impl Physics {
     pub fn new(x: f64, y: f64, r: f64, vx: f64, vy: f64) -> Self {
         Self { x, y, r, vx, vy }
     }
+}
+
+pub enum Behavior {
+    Drift,
+}
+
+impl Behavior {
+    pub fn tick(&self, input: Physics) -> Physics {
+        match self {
+            Behavior::Drift => Physics::new(
+                input.x + input.vx,
+                input.y + input.vy,
+                input.r,
+                input.vx,
+                input.vy,
+            ),
+        }
+    }
+}
+
+pub struct Blob {
+    physics: Physics,
+    behavior: Behavior,
+}
+
+impl Blob {
+    pub fn new(physics: Physics, behavior: Behavior) -> Self {
+        Self { physics, behavior }
+    }
 
     pub fn x(&self) -> f64 {
-        self.x
+        self.physics.x
     }
 
     pub fn y(&self) -> f64 {
-        self.y
+        self.physics.y
     }
 
     pub fn r(&self) -> f64 {
-        self.r
+        self.physics.r
     }
 
-    pub fn tick(&mut self) {
-        self.x += self.vx;
-        self.y += self.vy;
-
-        if self.x > 1024.0 || self.x < 0.0 {
-            self.vx = -self.vx;
-            //self.x += self.vx;
-        }
-
-        if self.y > 768.0 || self.y < 0.0 {
-            self.vy = -self.vy;
-            //self.y += self.vy;
-        }
+    pub fn tick(self) -> Blob {
+        let Self { physics, behavior } = self;
+        Blob::new(behavior.tick(physics), behavior)
     }
 }
 
@@ -55,11 +76,8 @@ impl Scene {
         T: Into<f64>,
     {
         self.blobs.push(Blob::new(
-            x.into(),
-            y.into(),
-            r.into(),
-            vx.into(),
-            vy.into(),
+            Physics::new(x.into(), y.into(), r.into(), vx.into(), vy.into()),
+            Behavior::Drift,
         ));
     }
 
@@ -68,7 +86,7 @@ impl Scene {
     }
 
     pub fn tick(&mut self) {
-        self.blobs.iter_mut().for_each(|blob| blob.tick());
+        self.blobs = self.blobs.drain(..).map(|blob| blob.tick()).collect_vec();
     }
 }
 
