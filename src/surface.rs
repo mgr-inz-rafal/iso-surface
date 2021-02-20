@@ -28,8 +28,6 @@ impl Surface {
     }
 
     pub fn pixel_color(scene: &Scene, x: i32, y: i32) -> (u8, u8, u8) {
-        // TODO: Calculate HTML-color here, so there's no need to call rgb() on JS
-
         let p1 = nalgebra::Point2::new(x as f64, y as f64);
         let mut sum = 0.0;
         for blob in scene.blobs() {
