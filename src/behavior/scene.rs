@@ -1,6 +1,6 @@
 use itertools::Itertools;
 
-use crate::{physics::Physics, Blob};
+use crate::{blob::Blob, physics::Physics};
 
 use super::behavior::Behavior;
 
