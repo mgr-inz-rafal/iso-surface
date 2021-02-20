@@ -16,20 +16,39 @@ impl Physics {
     }
 }
 
+trait Ticker {
+    fn tick(&self, input: Physics) -> Physics;
+}
+
+pub struct Drift {}
+
+impl Ticker for Drift {
+    fn tick(&self, input: Physics) -> Physics {
+        Physics::new(
+            input.x + input.vx,
+            input.y + input.vy,
+            input.r,
+            input.vx,
+            input.vy,
+        )
+    }
+}
+
 pub enum Behavior {
-    Drift,
+    Drift(Drift),
 }
 
 impl Behavior {
-    pub fn tick(&self, input: Physics) -> Physics {
+    pub fn new_drift() -> Behavior {
+        let x = Drift {};
+        Behavior::Drift(x)
+    }
+}
+
+impl Ticker for Behavior {
+    fn tick(&self, input: Physics) -> Physics {
         match self {
-            Behavior::Drift => Physics::new(
-                input.x + input.vx,
-                input.y + input.vy,
-                input.r,
-                input.vx,
-                input.vy,
-            ),
+            Behavior::Drift(drift_impl) => drift_impl.tick(input),
         }
     }
 }
@@ -77,7 +96,7 @@ impl Scene {
     {
         self.blobs.push(Blob::new(
             Physics::new(x.into(), y.into(), r.into(), vx.into(), vy.into()),
-            Behavior::Drift,
+            Behavior::new_drift(),
         ));
     }
 
