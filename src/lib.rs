@@ -21,6 +21,7 @@ trait Ticker {
 }
 
 pub struct Drift {}
+pub struct Bounce {}
 
 impl Ticker for Drift {
     fn tick(&self, input: Physics) -> Physics {
@@ -34,21 +35,46 @@ impl Ticker for Drift {
     }
 }
 
+impl Ticker for Bounce {
+    fn tick(&self, input: Physics) -> Physics {
+        Physics::new(
+            input.x + input.vx,
+            input.y + input.vy,
+            input.r,
+            if input.x + input.vx > 1024.0 || input.x + input.vx < 0.0 {
+                -input.vx
+            } else {
+                input.vx
+            },
+            if input.y + input.vy > 768.0 || input.y + input.vy < 0.0 {
+                -input.vy
+            } else {
+                input.vy
+            },
+        )
+    }
+}
+
 pub enum Behavior {
     Drift(Drift),
+    Bounce(Bounce),
 }
 
 impl Behavior {
     pub fn new_drift() -> Behavior {
-        let x = Drift {};
-        Behavior::Drift(x)
+        Behavior::Drift(Drift {})
+    }
+
+    pub fn new_bounce() -> Behavior {
+        Behavior::Bounce(Bounce {})
     }
 }
 
 impl Ticker for Behavior {
     fn tick(&self, input: Physics) -> Physics {
         match self {
-            Behavior::Drift(drift_impl) => drift_impl.tick(input),
+            Behavior::Drift(implementation) => implementation.tick(input),
+            Behavior::Bounce(implementation) => implementation.tick(input),
         }
     }
 }
@@ -90,13 +116,23 @@ impl Scene {
         Self { blobs: vec![] }
     }
 
-    pub fn add_blob<T>(&mut self, x: T, y: T, r: T, vx: T, vy: T)
+    pub fn add_drifter<T>(&mut self, x: T, y: T, r: T, vx: T, vy: T)
     where
         T: Into<f64>,
     {
         self.blobs.push(Blob::new(
             Physics::new(x.into(), y.into(), r.into(), vx.into(), vy.into()),
             Behavior::new_drift(),
+        ));
+    }
+
+    pub fn add_bouncer<T>(&mut self, x: T, y: T, r: T, vx: T, vy: T)
+    where
+        T: Into<f64>,
+    {
+        self.blobs.push(Blob::new(
+            Physics::new(x.into(), y.into(), r.into(), vx.into(), vy.into()),
+            Behavior::new_bounce(),
         ));
     }
 
