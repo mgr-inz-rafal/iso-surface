@@ -22,8 +22,8 @@ impl Blob {
         self.physics.r
     }
 
-    pub fn tick(self) -> Blob {
+    pub fn tick(self, dimension: &(u32, u32)) -> Blob {
         let Self { physics, behavior } = self;
-        Blob::new(behavior.tick(physics), behavior)
+        Blob::new(behavior.tick(physics, dimension), behavior)
     }
 }

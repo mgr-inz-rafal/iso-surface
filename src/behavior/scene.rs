@@ -1,16 +1,20 @@
 use itertools::Itertools;
 
-use crate::{blob::Blob, physics::Physics};
+use crate::{blob::Blob, physics::Physics, surface::Surface};
 
 use super::behavior::Behavior;
 
 pub struct Scene {
+    dimension: (u32, u32),
     blobs: Vec<Blob>,
 }
 
 impl Scene {
-    pub fn new() -> Self {
-        Self { blobs: vec![] }
+    pub fn new(surface: &Surface) -> Self {
+        Self {
+            dimension: (surface.width(), surface.height()),
+            blobs: vec![],
+        }
     }
 
     pub fn add_drifter<T>(&mut self, x: T, y: T, r: T, vx: T, vy: T)
@@ -38,6 +42,11 @@ impl Scene {
     }
 
     pub fn tick(&mut self) {
-        self.blobs = self.blobs.drain(..).map(|blob| blob.tick()).collect_vec();
+        let dimension = &self.dimension;
+        self.blobs = self
+            .blobs
+            .drain(..)
+            .map(|blob| blob.tick(&dimension))
+            .collect_vec();
     }
 }
