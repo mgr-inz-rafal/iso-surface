@@ -1,4 +1,4 @@
-use crate::{behavior::behavior::Behavior, physics::Physics, Ticker};
+use crate::{behaviors::behavior::Behavior, physics::Physics, Ticker};
 
 pub struct Blob {
     physics: Physics,
