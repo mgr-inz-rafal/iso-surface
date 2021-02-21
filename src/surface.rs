@@ -1,4 +1,4 @@
-use crate::Scene;
+use crate::scene::Scene;
 
 const SCALE: f64 = 400.0;
 

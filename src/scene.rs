@@ -1,8 +1,6 @@
 use itertools::Itertools;
 
-use crate::{blob::Blob, physics::Physics, surface::Surface};
-
-use super::behavior::Behavior;
+use crate::{behavior::behavior::Behavior, blob::Blob, physics::Physics, surface::Surface};
 
 pub struct Scene {
     dimension: (u32, u32),
