@@ -5,6 +5,7 @@ use super::{bounce::Bounce, drift::Drift};
 pub enum Behavior {
     Drift(Drift),
     Bounce(Bounce),
+    Custom(Box<dyn Ticker>),
 }
 
 impl Behavior {
@@ -15,6 +16,10 @@ impl Behavior {
     pub fn new_bounce() -> Behavior {
         Behavior::Bounce(Bounce {})
     }
+
+    pub fn new_custom(ticker: Box<dyn Ticker>) -> Behavior {
+        Behavior::Custom(ticker)
+    }
 }
 
 impl Ticker for Behavior {
@@ -22,6 +27,7 @@ impl Ticker for Behavior {
         match self {
             Behavior::Drift(implementation) => implementation.tick(input, dimension),
             Behavior::Bounce(implementation) => implementation.tick(input, dimension),
+            Behavior::Custom(implementation) => implementation.tick(input, dimension),
         }
     }
 }

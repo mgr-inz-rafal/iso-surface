@@ -1,12 +1,12 @@
 mod behavior;
 mod blob;
-mod physics;
+pub mod physics;
 pub mod scene;
 pub mod surface;
 
-use physics::Physics;
+pub use physics::Physics;
 
-trait Ticker {
+pub trait Ticker {
     fn tick(&self, input: Physics, dimension: &(u32, u32)) -> Physics;
 }
 

@@ -7,7 +7,13 @@ pub struct Physics {
 }
 
 impl Physics {
-    pub fn new(x: f64, y: f64, r: f64, vx: f64, vy: f64) -> Self {
-        Self { x, y, r, vx, vy }
+    pub fn new<T: Into<f64>>(x: T, y: T, r: T, vx: T, vy: T) -> Self {
+        Self {
+            x: x.into(),
+            y: y.into(),
+            r: r.into(),
+            vx: vx.into(),
+            vy: vy.into(),
+        }
     }
 }

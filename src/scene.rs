@@ -1,6 +1,6 @@
 use itertools::Itertools;
 
-use crate::{behavior::behavior::Behavior, blob::Blob, physics::Physics, surface::Surface};
+use crate::{behavior::behavior::Behavior, blob::Blob, physics::Physics, surface::Surface, Ticker};
 
 pub struct Scene {
     dimension: (u32, u32),
@@ -32,6 +32,16 @@ impl Scene {
         self.blobs.push(Blob::new(
             Physics::new(x.into(), y.into(), r.into(), vx.into(), vy.into()),
             Behavior::new_bounce(),
+        ));
+    }
+
+    pub fn add_custom<T>(&mut self, x: T, y: T, r: T, vx: T, vy: T, ticker: Box<dyn Ticker>)
+    where
+        T: Into<f64>,
+    {
+        self.blobs.push(Blob::new(
+            Physics::new(x.into(), y.into(), r.into(), vx.into(), vy.into()),
+            Behavior::new_custom(ticker),
         ));
     }
 
