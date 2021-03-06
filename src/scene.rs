@@ -1,15 +1,16 @@
 use itertools::Itertools;
 
 use crate::{
-    behaviors::behavior::Behavior, blob::Blob, physics::Physics, surface::Surface, Ticker,
+    behaviors::behavior::Behavior, blob::Blob, physics::Physics, surface::Surface, Contextable,
+    Ticker,
 };
 
-pub struct Scene {
+pub struct Scene<C: Contextable> {
     dimension: (u32, u32),
-    blobs: Vec<Blob>,
+    blobs: Vec<Blob<C>>,
 }
 
-impl Scene {
+impl<C: Contextable> Scene<C> {
     pub fn new(surface: &Surface) -> Self {
         Self {
             dimension: (surface.width(), surface.height()),
@@ -22,7 +23,7 @@ impl Scene {
         T: Into<f64>,
     {
         self.blobs.push(Blob::new(
-            Physics::new(x.into(), y.into(), r.into(), vx.into(), vy.into(), 0),
+            Physics::new(x.into(), y.into(), r.into(), vx.into(), vy.into()),
             Behavior::new_drift(),
         ));
     }
@@ -32,7 +33,7 @@ impl Scene {
         T: Into<f64>,
     {
         self.blobs.push(Blob::new(
-            Physics::new(x.into(), y.into(), r.into(), vx.into(), vy.into(), 0),
+            Physics::new(x.into(), y.into(), r.into(), vx.into(), vy.into()),
             Behavior::new_bounce(),
         ));
     }
@@ -44,18 +45,18 @@ impl Scene {
         r: T,
         vx: T,
         vy: T,
-        context: usize,
-        ticker: Box<dyn Ticker>,
+        context: C,
+        ticker: Box<dyn Ticker<C>>,
     ) where
         T: Into<f64>,
     {
         self.blobs.push(Blob::new(
-            Physics::new(x.into(), y.into(), r.into(), vx.into(), vy.into(), context),
+            Physics::with_context(x.into(), y.into(), r.into(), vx.into(), vy.into(), context),
             Behavior::new_custom(ticker),
         ));
     }
 
-    pub fn blobs(&self) -> impl Iterator<Item = &Blob> {
+    pub fn blobs(&self) -> impl Iterator<Item = &Blob<C>> {
         self.blobs.iter()
     }
 

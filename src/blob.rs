@@ -1,12 +1,12 @@
-use crate::{behaviors::behavior::Behavior, physics::Physics, Ticker};
+use crate::{behaviors::behavior::Behavior, physics::Physics, Contextable, Ticker};
 
-pub struct Blob {
-    physics: Physics,
-    behavior: Behavior,
+pub struct Blob<C: Contextable> {
+    physics: Physics<C>,
+    behavior: Behavior<C>,
 }
 
-impl Blob {
-    pub fn new(physics: Physics, behavior: Behavior) -> Self {
+impl<C: Contextable> Blob<C> {
+    pub fn new(physics: Physics<C>, behavior: Behavior<C>) -> Self {
         Self { physics, behavior }
     }
 
@@ -22,7 +22,7 @@ impl Blob {
         self.physics.r
     }
 
-    pub fn tick(self, dimension: &(u32, u32)) -> Blob {
+    pub fn tick(self, dimension: &(u32, u32)) -> Blob<C> {
         let Self { physics, behavior } = self;
         Blob::new(behavior.tick(physics, dimension), behavior)
     }

@@ -1,4 +1,4 @@
-use crate::scene::Scene;
+use crate::{scene::Scene, Contextable};
 
 const SCALE: f64 = 400.0;
 
@@ -27,7 +27,10 @@ impl Surface {
         nalgebra::distance(&p1, &p2)
     }
 
-    pub fn pixel_color(scene: &Scene, x: i32, y: i32) -> (u8, u8, u8) {
+    pub fn pixel_color<C>(scene: &Scene<C>, x: i32, y: i32) -> (u8, u8, u8)
+    where
+        C: Contextable,
+    {
         let p1 = nalgebra::Point2::new(x as f64, y as f64);
         let mut sum = 0.0;
         for blob in scene.blobs() {

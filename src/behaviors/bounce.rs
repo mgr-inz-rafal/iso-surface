@@ -1,9 +1,9 @@
-use crate::{physics::Physics, Ticker};
+use crate::{physics::Physics, Contextable, Ticker};
 
 pub struct Bounce {}
 
-impl Ticker for Bounce {
-    fn tick(&self, input: Physics, dimension: &(u32, u32)) -> Physics {
+impl<C: Contextable> Ticker<C> for Bounce {
+    fn tick(&self, input: Physics<C>, dimension: &(u32, u32)) -> Physics<C> {
         Physics::new(
             input.x + input.vx,
             input.y + input.vy,
@@ -18,7 +18,6 @@ impl Ticker for Bounce {
             } else {
                 input.vy
             },
-            0,
         )
     }
 }
