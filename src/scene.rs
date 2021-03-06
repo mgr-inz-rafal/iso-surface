@@ -37,12 +37,20 @@ impl Scene {
         ));
     }
 
-    pub fn add_custom<T>(&mut self, x: T, y: T, r: T, vx: T, vy: T, ticker: Box<dyn Ticker>)
-    where
+    pub fn add_custom<T>(
+        &mut self,
+        x: T,
+        y: T,
+        r: T,
+        vx: T,
+        vy: T,
+        context: usize,
+        ticker: Box<dyn Ticker>,
+    ) where
         T: Into<f64>,
     {
         self.blobs.push(Blob::new(
-            Physics::new(x.into(), y.into(), r.into(), vx.into(), vy.into(), 0),
+            Physics::new(x.into(), y.into(), r.into(), vx.into(), vy.into(), context),
             Behavior::new_custom(ticker),
         ));
     }
