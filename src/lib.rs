@@ -13,4 +13,5 @@ pub trait Ticker<C: Contextable> {
 pub trait Contextable {
     fn frame(&self) -> usize;
     fn set_frame(&mut self, frame: usize);
+    fn should_advance(&mut self) -> bool;
 }
