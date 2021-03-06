@@ -18,6 +18,7 @@ impl Ticker for Bounce {
             } else {
                 input.vy
             },
+            0,
         )
     }
 }

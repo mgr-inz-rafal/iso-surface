@@ -1,6 +1,8 @@
 use itertools::Itertools;
 
-use crate::{behaviors::behavior::Behavior, blob::Blob, physics::Physics, surface::Surface, Ticker};
+use crate::{
+    behaviors::behavior::Behavior, blob::Blob, physics::Physics, surface::Surface, Ticker,
+};
 
 pub struct Scene {
     dimension: (u32, u32),
@@ -20,7 +22,7 @@ impl Scene {
         T: Into<f64>,
     {
         self.blobs.push(Blob::new(
-            Physics::new(x.into(), y.into(), r.into(), vx.into(), vy.into()),
+            Physics::new(x.into(), y.into(), r.into(), vx.into(), vy.into(), 0),
             Behavior::new_drift(),
         ));
     }
@@ -30,7 +32,7 @@ impl Scene {
         T: Into<f64>,
     {
         self.blobs.push(Blob::new(
-            Physics::new(x.into(), y.into(), r.into(), vx.into(), vy.into()),
+            Physics::new(x.into(), y.into(), r.into(), vx.into(), vy.into(), 0),
             Behavior::new_bounce(),
         ));
     }
@@ -40,7 +42,7 @@ impl Scene {
         T: Into<f64>,
     {
         self.blobs.push(Blob::new(
-            Physics::new(x.into(), y.into(), r.into(), vx.into(), vy.into()),
+            Physics::new(x.into(), y.into(), r.into(), vx.into(), vy.into(), 0),
             Behavior::new_custom(ticker),
         ));
     }

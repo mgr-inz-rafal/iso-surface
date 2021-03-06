@@ -10,6 +10,7 @@ impl Ticker for Drift {
             input.r,
             input.vx,
             input.vy,
+            0,
         )
     }
 }
