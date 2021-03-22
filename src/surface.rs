@@ -35,7 +35,14 @@ impl Surface {
         let mut sum = 0.0;
         for blob in scene.blobs() {
             let p2 = nalgebra::Point2::new(blob.x(), blob.y());
-            sum += SCALE * blob.r() / nalgebra::distance(&p1, &p2);
+            //            sum += SCALE * blob.r() / nalgebra::distance(&p1, &p2);
+
+            let dist_y = (blob.y() as f64 - y as f64) * (blob.y() as f64 - y as f64);
+            let dist_x = (blob.x() as f64 - x as f64) * (blob.x() as f64 - x as f64);
+            let dist_x = dist_x * 16.0;
+            let sum1 = dist_x + dist_y;
+            let dist = sum1.sqrt();
+            sum += SCALE * blob.r() / dist;
         }
         (0, sum as u8, 0)
     }
